@@ -41,6 +41,7 @@ export class ExercisesComponent implements OnInit {
     ngOnInit() {
         // this.creatingObservableFromArray();
         // this.otherWaysToCreateObservableFromArray();
+        this.timerObservable();
     }
 
     creatingObservableFromArray(): void {
@@ -84,5 +85,47 @@ export class ExercisesComponent implements OnInit {
         var observable5 = Rx.Observable.of(1, 2, 3);
         observable5.subscribe(x => console.log(x));
 
+    }
+    timerObservable() {
+        var observable = Rx.Observable.interval(5000);
+        observable
+            // .map(x => {
+            //     console.log("calling the server to get the lastest news");
+            //     return {
+            //         news: [
+            //             {
+            //                 title: 'T1',
+            //                 content: 'Content1'
+            //             },
+            //             {
+            //                 title: 'T2',
+            //                 content: 'Content2'
+            //             }, {
+            //                 title: 'T3',
+            //                 content: 'Content3'
+            //             },
+            //         ]
+            //     }
+            // })
+            .flatMap(x => {
+                console.log("calling the server to get the lastest news");
+                var result = {
+                    news: [
+                        {
+                            title: 'T1',
+                            content: 'Content1'
+                        },
+                        {
+                            title: 'T2',
+                            content: 'Content2'
+                        }, {
+                            title: 'T3',
+                            content: 'Content3'
+                        },
+                    ]
+                }
+                return Rx.Observable.of(result.news[1])
+            })
+            .subscribe(news => console.log(news));
     }
 }
