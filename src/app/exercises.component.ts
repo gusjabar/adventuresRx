@@ -43,7 +43,8 @@ export class ExercisesComponent implements OnInit {
         // this.otherWaysToCreateObservableFromArray();
         // this.timerObservable();
         //this.parallelObservables();
-        this.handlingErrorsInObservables();
+        //this.handlingErrorsInObservables();
+        this.timeoutObservables();
     }
 
     creatingObservableFromArray(): void {
@@ -185,5 +186,14 @@ export class ExercisesComponent implements OnInit {
             })
             .subscribe(x => console.log('Data Stream ', x));
 
+    }
+    timeoutObservables() {
+        var remoteDataStream = Rx.Observable.of([1, 2, 3]).delay(5000);
+        remoteDataStream
+            .timeout(1000)
+            .subscribe(
+            x => console.log(x),
+            err => console.error(err)
+            );
     }
 }
