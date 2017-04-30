@@ -44,7 +44,8 @@ export class ExercisesComponent implements OnInit {
         // this.timerObservable();
         //this.parallelObservables();
         //this.handlingErrorsInObservables();
-        this.timeoutObservables();
+        //this.timeoutObservables();
+        this.gettingNotifiedObservableCompletes();
     }
 
     creatingObservableFromArray(): void {
@@ -195,5 +196,15 @@ export class ExercisesComponent implements OnInit {
             x => console.log(x),
             err => console.error(err)
             );
+    }
+    gettingNotifiedObservableCompletes(){
+        var dataStream = Rx.Observable.from([1,2,3]);
+
+        dataStream.subscribe(
+            x=>console.log(x),
+            err=>console.log(err),
+            ()=>console.log('Completed!')
+            );
+
     }
 }
