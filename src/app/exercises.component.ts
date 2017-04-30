@@ -41,7 +41,8 @@ export class ExercisesComponent implements OnInit {
     ngOnInit() {
         // this.creatingObservableFromArray();
         // this.otherWaysToCreateObservableFromArray();
-        this.timerObservable();
+        // this.timerObservable();
+        this.parallelObservables()
     }
 
     creatingObservableFromArray(): void {
@@ -127,5 +128,26 @@ export class ExercisesComponent implements OnInit {
                 return Rx.Observable.of(result.news[1])
             })
             .subscribe(news => console.log(news));
+    }
+    parallelObservables() {
+        var userStream = Rx.Observable.of({
+            userId: 1023, userName: 'Gustavo'
+        }).delay(2000);
+
+        var tweetsStream = Rx.Observable.of([1, 2, 3]).delay(1500);
+        //User forkJoin to run both these observables in parallel.
+        Rx.Observable
+            .forkJoin(userStream, tweetsStream)
+            .subscribe(result => console.log(result));
+        
+        //User map operator to map this array into a data structure that our application expects.
+        console.log('Mapping')
+        Rx.Observable
+            .forkJoin(userStream, tweetsStream)
+            .map(joined => 
+                new Object({ user: joined[0], tweets: joined[1] })
+            )
+            .subscribe(result => console.log(result));
+
     }
 }
