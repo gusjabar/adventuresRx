@@ -39,6 +39,11 @@ export class ExercisesComponent implements OnInit {
             ;
     }
     ngOnInit() {
+        // this.creatingObservableFromArray();
+        // this.otherWaysToCreateObservableFromArray();
+    }
+
+    creatingObservableFromArray(): void {
         var startDates = [];
         var startDate = new Date();
         //Create an array of the travel start dates
@@ -60,7 +65,24 @@ export class ExercisesComponent implements OnInit {
                 return [1, 2, 3]
             })
             .subscribe(x => console.log(x));
-
+    }
+    otherWaysToCreateObservableFromArray() {
+        console.log("Empty");
+        var observable = Rx.Observable.empty();
+        observable.subscribe(x => console.log(x));
+        console.log("Range");
+        var observable2 = Rx.Observable.range(1, 5);
+        observable2.subscribe(x => console.log(x));
+        console.log("From");
+        var observable3 = Rx.Observable.from([1, 2, 3]);
+        observable3.subscribe(x => console.log(x));
+        console.log("Of");
+        //return an observable with one item: [1,2,3]
+        var observable4 = Rx.Observable.of([1, 2, 3]);
+        observable4.subscribe(x => console.log(x));
+        //return an observable with three items: 1,2,3
+        var observable5 = Rx.Observable.of(1, 2, 3);
+        observable5.subscribe(x => console.log(x));
 
     }
 }
