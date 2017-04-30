@@ -42,7 +42,8 @@ export class ExercisesComponent implements OnInit {
         // this.creatingObservableFromArray();
         // this.otherWaysToCreateObservableFromArray();
         // this.timerObservable();
-        this.parallelObservables()
+        //this.parallelObservables();
+        this.handlingErrorsInObservables();
     }
 
     creatingObservableFromArray(): void {
@@ -139,15 +140,50 @@ export class ExercisesComponent implements OnInit {
         Rx.Observable
             .forkJoin(userStream, tweetsStream)
             .subscribe(result => console.log(result));
-        
+
         //User map operator to map this array into a data structure that our application expects.
         console.log('Mapping')
         Rx.Observable
             .forkJoin(userStream, tweetsStream)
-            .map(joined => 
+            .map(joined =>
                 new Object({ user: joined[0], tweets: joined[1] })
             )
             .subscribe(result => console.log(result));
+
+    }
+    handlingErrorsInObservables() {
+
+        // var observable = Rx.Observable.throw(new Error('Something failed.'));
+        // observable.subscribe(
+        //     x => console.log(x),
+        //     error => console.error(error)
+        //     );
+        var counter = 0;
+        //In real-world app. you wouldn't create an observable for an AJAX call like this. Use http
+        var ajaxCall = Rx.Observable.of('url')
+            .flatMap(() => {
+                if (++counter < 2) {
+                    return Rx.Observable.throw(new Error('Request failed'));
+                }
+                return Rx.Observable.of([1, 2, 3]);
+            });
+        ajaxCall
+            .retry(3)
+            .subscribe(
+            x => console.log(x),
+            error => console.error(error)
+            );
+        //Catching and continuing
+        var remoteDataStream = Rx.Observable.throw(new Error('Something failed.'));//shows 1,2,3
+        //var remoteDataStream = Rx.Observable.of([4, 5, 6]);//shows 4,5,6.
+
+        remoteDataStream
+            .catch(err => {
+                var localDataStream = Rx.Observable.of([1, 2, 3]);
+                console.log(err);
+                return localDataStream;
+            })
+            .subscribe(x => console.log('Data Stream ', x));
 
     }
 }
